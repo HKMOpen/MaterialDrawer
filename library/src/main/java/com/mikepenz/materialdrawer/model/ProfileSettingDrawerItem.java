@@ -2,155 +2,147 @@ package com.mikepenz.materialdrawer.model;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.view.LayoutInflater;
+import android.support.annotation.*;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.iconics.typeface.IIcon;
 import com.mikepenz.materialdrawer.R;
-import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
+import com.mikepenz.materialdrawer.holder.ColorHolder;
+import com.mikepenz.materialdrawer.holder.ImageHolder;
+import com.mikepenz.materialdrawer.holder.StringHolder;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
-import com.mikepenz.materialdrawer.model.interfaces.Identifyable;
 import com.mikepenz.materialdrawer.model.interfaces.Tagable;
 import com.mikepenz.materialdrawer.model.interfaces.Typefaceable;
-import com.mikepenz.materialdrawer.util.UIUtils;
+import com.mikepenz.materialdrawer.util.DrawerUIUtils;
+import com.mikepenz.materialize.util.UIUtils;
+
+import java.util.List;
 
 /**
  * Created by mikepenz on 03.02.15.
  */
-public class ProfileSettingDrawerItem implements IDrawerItem, IProfile<ProfileSettingDrawerItem>, Tagable<ProfileSettingDrawerItem>, Identifyable<ProfileSettingDrawerItem>, Typefaceable<ProfileSettingDrawerItem> {
+public class ProfileSettingDrawerItem extends AbstractDrawerItem<ProfileSettingDrawerItem, ProfileSettingDrawerItem.ViewHolder> implements IProfile<ProfileSettingDrawerItem>, Tagable<ProfileSettingDrawerItem>, Typefaceable<ProfileSettingDrawerItem> {
+    private ImageHolder icon;
 
-    private int identifier = -1;
-
-    private boolean selectable = false;
-
-    private Drawable icon;
-    private Bitmap iconBitmap;
-    private IIcon iicon;
-    private Uri iconUri;
-
-    private String name;
-    private String email;
-
-    private boolean enabled = true;
-    private Object tag;
+    private StringHolder name;
+    private StringHolder description;
 
     private boolean iconTinted = false;
 
-    private int selectedColor = 0;
-    private int selectedColorRes = -1;
-
-    private int textColor = 0;
-    private int textColorRes = -1;
-
-    private int iconColor = 0;
-    private int iconColorRes = -1;
+    private ColorHolder selectedColor;
+    private ColorHolder textColor;
+    private ColorHolder iconColor;
+    private ColorHolder descriptionTextColor;
 
     private Typeface typeface = null;
 
-    public ProfileSettingDrawerItem withIdentifier(int identifier) {
-        this.identifier = identifier;
-        return this;
-    }
+    private boolean selectable = false;
 
+    @Override
     public ProfileSettingDrawerItem withIcon(Drawable icon) {
-        this.icon = icon;
+        this.icon = new ImageHolder(icon);
         return this;
     }
 
+    @Override
+    public ProfileSettingDrawerItem withIcon(@DrawableRes int iconRes) {
+        this.icon = new ImageHolder(iconRes);
+        return this;
+    }
+
+    @Override
     public ProfileSettingDrawerItem withIcon(Bitmap icon) {
-        this.iconBitmap = icon;
+        this.icon = new ImageHolder(icon);
         return this;
     }
 
+    @Override
     public ProfileSettingDrawerItem withIcon(IIcon iicon) {
-        this.iicon = iicon;
+        this.icon = new ImageHolder(iicon);
         return this;
     }
 
     @Override
     public ProfileSettingDrawerItem withIcon(String url) {
-        this.iconUri = Uri.parse(url);
+        this.icon = new ImageHolder(url);
         return this;
     }
 
     @Override
     public ProfileSettingDrawerItem withIcon(Uri uri) {
-        this.iconUri = uri;
+        this.icon = new ImageHolder(uri);
         return this;
     }
 
     public ProfileSettingDrawerItem withName(String name) {
-        this.name = name;
+        this.name = new StringHolder(name);
+        return this;
+    }
+
+    public ProfileSettingDrawerItem withName(@StringRes int nameRes) {
+        this.name = new StringHolder(nameRes);
         return this;
     }
 
     public ProfileSettingDrawerItem withDescription(String description) {
-        this.email = description;
+        this.description = new StringHolder(description);
+        return this;
+    }
+
+    public ProfileSettingDrawerItem withDescription(@StringRes int descriptionRes) {
+        this.description = new StringHolder(descriptionRes);
         return this;
     }
 
     //NOTE we reuse the IProfile here to allow custom items within the AccountSwitcher. There is an alias method withDescription for this
     public ProfileSettingDrawerItem withEmail(String email) {
-        this.email = email;
+        this.description = new StringHolder(email);
         return this;
     }
 
-    public ProfileSettingDrawerItem withTag(Object object) {
-        this.tag = object;
+    public ProfileSettingDrawerItem withSelectedColor(@ColorInt int selectedColor) {
+        this.selectedColor = ColorHolder.fromColor(selectedColor);
         return this;
     }
 
-    public ProfileSettingDrawerItem setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public ProfileSettingDrawerItem withSelectedColorRes(@ColorRes int selectedColorRes) {
+        this.selectedColor = ColorHolder.fromColorRes(selectedColorRes);
         return this;
     }
 
-    public ProfileSettingDrawerItem withEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public ProfileSettingDrawerItem withTextColor(@ColorInt int textColor) {
+        this.textColor = ColorHolder.fromColor(textColor);
         return this;
     }
 
-    public ProfileSettingDrawerItem withSelectedColor(int selectedColor) {
-        this.selectedColor = selectedColor;
+    public ProfileSettingDrawerItem withTextColorRes(@ColorRes int textColorRes) {
+        this.textColor = ColorHolder.fromColorRes(textColorRes);
         return this;
     }
 
-    public ProfileSettingDrawerItem withSelectedColorRes(int selectedColorRes) {
-        this.selectedColorRes = selectedColorRes;
+    public ProfileSettingDrawerItem withDescriptionTextColor(@ColorInt int descriptionColor) {
+        this.descriptionTextColor = ColorHolder.fromColor(descriptionColor);
         return this;
     }
 
-    public ProfileSettingDrawerItem withTextColor(int textColor) {
-        this.textColor = textColor;
+    public ProfileSettingDrawerItem withDescriptionTextColorRes(@ColorRes int descriptionColorRes) {
+        this.descriptionTextColor = ColorHolder.fromColorRes(descriptionColorRes);
         return this;
     }
 
-    public ProfileSettingDrawerItem withTextColorRes(int textColorRes) {
-        this.textColorRes = textColorRes;
+    public ProfileSettingDrawerItem withIconColor(@ColorInt int iconColor) {
+        this.iconColor = ColorHolder.fromColor(iconColor);
         return this;
     }
 
-    public ProfileSettingDrawerItem withIconColor(int iconColor) {
-        this.iconColor = iconColor;
-        return this;
-    }
-
-    public ProfileSettingDrawerItem withIconColorRes(int iconColorRes) {
-        this.iconColorRes = iconColorRes;
-        return this;
-    }
-
-    @Override
-    public ProfileSettingDrawerItem withSelectable(boolean selectable) {
-        this.selectable = selectable;
+    public ProfileSettingDrawerItem withIconColorRes(@ColorRes int iconColorRes) {
+        this.iconColor = ColorHolder.fromColorRes(iconColorRes);
         return this;
     }
 
@@ -164,112 +156,25 @@ public class ProfileSettingDrawerItem implements IDrawerItem, IProfile<ProfileSe
         return this;
     }
 
-    @Override
-    public Bitmap getIconBitmap() {
-        return iconBitmap;
-    }
-
-    @Override
-    public void setIconBitmap(Bitmap iconBitmap) {
-        this.iconBitmap = iconBitmap;
-    }
-
-    public int getSelectedColor() {
+    public ColorHolder getSelectedColor() {
         return selectedColor;
     }
 
-    public void setSelectedColor(int selectedColor) {
-        this.selectedColor = selectedColor;
-    }
-
-    public int getSelectedColorRes() {
-        return selectedColorRes;
-    }
-
-    public void setSelectedColorRes(int selectedColorRes) {
-        this.selectedColorRes = selectedColorRes;
-    }
-
-    public int getTextColor() {
+    public ColorHolder getTextColor() {
         return textColor;
     }
 
-    public void setTextColor(int textColor) {
-        this.textColor = textColor;
+    public ColorHolder getDescriptionTextColor() {
+        return descriptionTextColor;
     }
 
-    public int getTextColorRes() {
-        return textColorRes;
-    }
-
-    public void setTextColorRes(int textColorRes) {
-        this.textColorRes = textColorRes;
-    }
-
-    public int getIconColorRes() {
-        return iconColorRes;
-    }
-
-    public void setIconColorRes(int iconColorRes) {
-        this.iconColorRes = iconColorRes;
-    }
-
-    public int getIconColor() {
+    public ColorHolder getIconColor() {
         return iconColor;
     }
 
-    public void setIconColor(int iconColor) {
-        this.iconColor = iconColor;
-    }
 
-    @Override
-    public Object getTag() {
-        return tag;
-    }
-
-    @Override
-    public void setTag(Object tag) {
-        this.tag = tag;
-    }
-
-    public Drawable getIcon() {
+    public ImageHolder getIcon() {
         return icon;
-    }
-
-    public void setIcon(Drawable icon) {
-        this.icon = icon;
-    }
-
-    public IIcon getIIcon() {
-        return iicon;
-    }
-
-    public void setIIcon(IIcon iicon) {
-        this.iicon = iicon;
-    }
-
-    public void setIcon(Uri uri) {
-        this.iconUri = uri;
-    }
-
-    public void setIcon(String url) {
-        this.iconUri = Uri.parse(url);
-    }
-
-    @Override
-    public Uri getIconUri() {
-        return iconUri;
-    }
-
-    @Override
-    public boolean isSelectable() {
-        return selectable;
-    }
-
-    @Override
-    public ProfileSettingDrawerItem setSelectable(boolean selectable) {
-        this.selectable = selectable;
-        return this;
     }
 
     public boolean isIconTinted() {
@@ -286,117 +191,105 @@ public class ProfileSettingDrawerItem implements IDrawerItem, IProfile<ProfileSe
     }
 
     @Override
-    public void setTypeface(Typeface typeface) {
-        this.typeface = typeface;
-    }
-
-    @Override
-    public String getName() {
+    public StringHolder getName() {
         return name;
     }
 
-    @Override
-    public void setName(String name) {
-        this.name = name;
+    public StringHolder getEmail() {
+        return description;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getDescription() {
-        return email;
+    public StringHolder getDescription() {
+        return description;
     }
 
     public void setDescription(String description) {
-        this.email = email;
+        this.description = new StringHolder(description);
     }
 
     @Override
-    public int getIdentifier() {
-        return identifier;
+    public boolean isSelectable() {
+        return selectable;
     }
 
-    public void setIdentifier(int identifier) {
-        this.identifier = identifier;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return enabled;
+    public ProfileSettingDrawerItem withSelectable(boolean selectable) {
+        this.selectable = selectable;
+        return this;
     }
 
     @Override
-    public String getType() {
-        return "PROFILE_SETTING_ITEM";
+    public int getType() {
+        return R.id.material_drawer_item_profile_setting;
     }
 
     @Override
+    @LayoutRes
     public int getLayoutRes() {
         return R.layout.material_drawer_item_profile_setting;
     }
 
     @Override
-    public View convertView(LayoutInflater inflater, View convertView, ViewGroup parent) {
-        Context ctx = parent.getContext();
+    public void bindView(ViewHolder viewHolder, List payloads) {
+        super.bindView(viewHolder, payloads);
 
-        ViewHolder viewHolder;
-        if (convertView == null) {
-            convertView = inflater.inflate(getLayoutRes(), parent, false);
-            viewHolder = new ViewHolder(convertView);
-            convertView.setTag(viewHolder);
-        } else {
-            viewHolder = (ViewHolder) convertView.getTag();
-        }
+        //get the context
+        Context ctx = viewHolder.itemView.getContext();
+
+        //set the identifier from the drawerItem here. It can be used to run tests
+        viewHolder.itemView.setId(hashCode());
+
+        //set the item enabled if it is
+        viewHolder.itemView.setEnabled(isEnabled());
+
+        //set the item selected if it is
+        viewHolder.itemView.setSelected(isSelected());
 
         //get the correct color for the background
-        int selectedColor = UIUtils.decideColor(ctx, getSelectedColor(), getSelectedColorRes(), R.attr.material_drawer_selected, R.color.material_drawer_selected);
+        int selectedColor = ColorHolder.color(getSelectedColor(), ctx, R.attr.material_drawer_selected, R.color.material_drawer_selected);
         //get the correct color for the text
-        int color = UIUtils.decideColor(ctx, getTextColor(), getTextColorRes(), R.attr.material_drawer_primary_text, R.color.material_drawer_primary_text);
-        int iconColor = UIUtils.decideColor(ctx, getIconColor(), getIconColorRes(), R.attr.material_drawer_primary_icon, R.color.material_drawer_primary_icon);
+        int color = ColorHolder.color(getTextColor(), ctx, R.attr.material_drawer_primary_text, R.color.material_drawer_primary_text);
+        int iconColor = ColorHolder.color(getIconColor(), ctx, R.attr.material_drawer_primary_icon, R.color.material_drawer_primary_icon);
+        int descriptionColor = ColorHolder.color(getDescriptionTextColor(), ctx, R.attr.material_drawer_primary_text, R.color.material_drawer_primary_text);
 
-        UIUtils.setBackground(viewHolder.view, UIUtils.getDrawerItemBackground(selectedColor));
+        UIUtils.setBackground(viewHolder.view, UIUtils.getSelectableBackground(ctx, selectedColor, isSelectedBackgroundAnimated()));
 
-        viewHolder.name.setText(this.getName());
+        StringHolder.applyTo(this.getName(), viewHolder.name);
         viewHolder.name.setTextColor(color);
+
+        StringHolder.applyToOrHide(this.getDescription(), viewHolder.description);
+        viewHolder.description.setTextColor(descriptionColor);
 
         if (getTypeface() != null) {
             viewHolder.name.setTypeface(getTypeface());
         }
 
-        //get the correct icon
-        if (this.getIcon() != null) {
-            if (icon != null && isIconTinted()) {
-                icon.setColorFilter(iconColor, PorterDuff.Mode.SRC_IN);
-            }
-            viewHolder.icon.setImageDrawable(icon);
-            viewHolder.icon.setVisibility(View.VISIBLE);
-        } else if (this.getIconBitmap() != null) {
-            viewHolder.icon.setImageBitmap(iconBitmap);
-            viewHolder.icon.setVisibility(View.VISIBLE);
-        } else if (this.getIIcon() != null) {
-            viewHolder.icon.setImageDrawable(new IconicsDrawable(ctx, this.getIIcon()).color(iconColor).actionBarSize().paddingDp(2));
-            viewHolder.icon.setVisibility(View.VISIBLE);
-        } else {
-            viewHolder.icon.setVisibility(View.GONE);
-        }
+        //set the correct icon
+        ImageHolder.applyDecidedIconOrSetGone(icon, viewHolder.icon, iconColor, isIconTinted(), 2);
 
-        return convertView;
+        //for android API 17 --> Padding not applied via xml
+        DrawerUIUtils.setDrawerVerticalPadding(viewHolder.view);
+
+        //call the onPostBindView method to trigger post bind view actions (like the listener to modify the item if required)
+        onPostBindView(this, viewHolder.itemView);
     }
 
-    private static class ViewHolder {
+    @Override
+    public ViewHolder getViewHolder(View v) {
+        return new ViewHolder(v);
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         private View view;
         private ImageView icon;
         private TextView name;
+        private TextView description;
 
         private ViewHolder(View view) {
+            super(view);
             this.view = view;
-            this.icon = (ImageView) view.findViewById(R.id.icon);
-            this.name = (TextView) view.findViewById(R.id.name);
+            this.icon = (ImageView) view.findViewById(R.id.material_drawer_icon);
+            this.name = (TextView) view.findViewById(R.id.material_drawer_name);
+            this.description = (TextView) view.findViewById(R.id.material_drawer_description);
         }
     }
 }
